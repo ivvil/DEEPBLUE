@@ -1,9 +1,8 @@
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { Vector2 } from 'three/src/Three.Core.js';
+import { Box3, Vector2, Vector3 } from 'three';
 
 export class Ship {
-    // 1. Added trailing slash to model path
-    static #modelPath = "models/kenney_watercraft-pack/Models/GLB format/";
+    static #modelPath = "/models/kenney_watercraft-pack/Models/GLB format/";
     static #loader = new GLTFLoader();
     static #modelSize = {
         3: [
@@ -29,34 +28,68 @@ export class Ship {
 
     model;
     size;
+    gridX;
+    gridY;
     dir;
-    pos; // 2. Added missing pos property declaration
 
-    constructor(size, pos, dir = new Vector2().random()) {
+    constructor(size, gridX, gridY, dir = new Vector2(1, 0)) {
         this.size = size;
-        this.pos = pos;
-        this.dir = dir.normalize(); // 3. Normalize direction vector
+        this.gridX = gridX;
+        this.gridY = gridY;
+        this.dir = dir.normalize();
 
-        // 4. Select random model based on size
         const models = Ship.#modelSize[this.size];
         if (!models) {
             throw new Error(`Invalid ship size: ${size}`);
         }
         const modelName = models[Math.floor(Math.random() * models.length)];
-        this.model = `${modelName}.glb`; // 5. Add .glb extension
+        this.model = `${modelName}.glb`;
     }
 
-    static render(scene, ship) {
+    static render(scene, ship, playfield) {
         const modelPath = Ship.#modelPath + ship.model;
         Ship.#loader.load(modelPath, 
             (gltf) => {
-                // 6. Use gltf.scene instead of gltf
                 const model = gltf.scene;
+
+                // Calculate rotation (convert from 2D direction to 3D rotation)
+                const angle = Math.atan2(ship.dir.y, ship.dir.x);
+                model.rotation.set(
+                    Math.PI / 2,  // Convert from Z-up to Y-up
+                    0,
+                    angle
+                );
                 
-                // 7. Set position and rotation based on ship properties
-                model.position.set(ship.pos.x, 0, ship.pos.y);
-                model.rotation.y = Math.atan2(ship.dir.y, ship.dir.x);
+                // Calculate original dimensions
+                const bbox = new Box3().setFromObject(model);
+                const originalSize = new Vector3();
+                bbox.getSize(originalSize);
+
+                // Calculate scaling factors
+                const targetLength = ship.size;
+                const targetWidth = 1;
+                const scale = new Vector3(
+                    targetWidth / originalSize.x,
+                    1 / originalSize.y,  // Maintain vertical proportions
+                    targetLength / originalSize.z
+                );
+
+                // Apply scaling
+                model.scale.copy(scale);
+
+                // Get grid-aligned position
+                const worldPos = playfield.getWorldPosition(ship.gridX, ship.gridY);
+
                 
+                // Position adjustments for ship orientation
+                const offset = new Vector3(
+                    -originalSize.z * scale.z * 0.5 * ship.dir.x,
+                    -originalSize.z * scale.z * 0.5 * ship.dir.y,
+                    0.1
+                );
+
+                model.position.copy(worldPos.add(offset));
+
                 scene.add(model);
             }, 
             undefined, 

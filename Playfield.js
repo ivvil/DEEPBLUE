@@ -66,6 +66,15 @@ export class Playfield {
         }
         this.scene.add(gridLines);
     }
+
+    getWorldPosition(gridX, gridY) {
+        const cellSize = 1; // Each grid cell is 1 unit
+        return new THREE.Vector3(
+            gridX - this.#COLS/2 + cellSize/2,
+            gridY - this.#ROWS/2 + cellSize/2,
+            0.1
+        );
+    }
 }
 
 export default Playfield;

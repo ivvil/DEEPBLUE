@@ -1,10 +1,13 @@
 import { Vector2 } from "three/src/Three.Core.js";
-import { Ship } from "./Ship.js"; // Assuming Ship class is in same directory
+import { Ship } from "./Ship.js";
 
 export class Game {
     static #ROWS = 10;
     static #COLS = 10;
 
+    /**
+     * Ships that will be placed in the field and their size
+     */
     static #PIECES = [
         { size: 3, amount: 2 },
         { size: 2, amount: 3 },
@@ -13,14 +16,15 @@ export class Game {
 
     #scene;
     #field = [];
+    #playfield;
 
-    constructor(scene) {
+    constructor(scene, playfield) {
         this.#scene = scene;
+        this.#playfield = playfield;
         this.#initField();
     }
 
     #initField() {
-        // Create 2D array representing game field
         this.#field = Array.from({ length: Game.#ROWS }, () => 
             Array(Game.#COLS).fill(false)
         );
@@ -28,7 +32,9 @@ export class Game {
 
     rndmField() {
         Game.#PIECES.forEach(piece => {
-            
+            for (let i = 0; i < piece.amount; i++) {
+                this.randomShip(piece.size);
+            }
         });
     }
 
@@ -38,31 +44,28 @@ export class Game {
         
         while (!placed && attempts < 100) {
             attempts++;
-            // Generate random position (zero-based indices)
-            const initPos = new Vector2(
-                Math.floor(Math.random() * Game.#COLS),
-                Math.floor(Math.random() * Game.#ROWS)
-            );
-            
-            // Random direction (horizontal/vertical)
+            const gridX = Math.floor(Math.random() * Game.#COLS);
+            const gridY = Math.floor(Math.random() * Game.#ROWS);
             const direction = Math.random() > 0.5 ? 'horizontal' : 'vertical';
             
-            // Calculate boundaries
             let tl, br;
             if (direction === 'horizontal') {
-                tl = new Vector2(initPos.x, initPos.y);
-                br = new Vector2(initPos.x + size - 1, initPos.y);
+                tl = new Vector2(gridX, gridY);
+                br = new Vector2(gridX + size - 1, gridY);
             } else {
-                tl = new Vector2(initPos.x, initPos.y);
-                br = new Vector2(initPos.x, initPos.y + size - 1);
+                tl = new Vector2(gridX, gridY);
+                br = new Vector2(gridX, gridY + size - 1);
             }
 
             if (this.canShipSpawn(tl, br)) {
-                // Create ship and add to scene
-                const ship = new Ship(size, initPos, this.#getDirectionVector(direction));
-                Ship.render(this.#scene, ship);
-                
-                // Mark cells as occupied
+                const dirVector = this.#getDirectionVector(direction);
+                const ship = new Ship(
+                    size,
+                    gridX,
+                    gridY,
+                    dirVector
+                );
+                Ship.render(this.#scene, ship, this.#playfield);
                 this.#markShipPosition(tl, br);
                 placed = true;
                 return ship;
@@ -79,12 +82,10 @@ export class Game {
     }
 
     canShipSpawn(tl, br) {
-        // Check boundaries
         if (tl.x < 0 || tl.y < 0 || br.x >= Game.#COLS || br.y >= Game.#ROWS) {
             return false;
         }
 
-        // Check occupancy
         for (let y = tl.y; y <= br.y; y++) {
             for (let x = tl.x; x <= br.x; x++) {
                 if (this.#field[y][x]) return false;
@@ -101,7 +102,6 @@ export class Game {
         }
     }
 
-    // Add method to place all ships according to PIECES configuration
     placeAllShips() {
         Game.#PIECES.forEach(piece => {
             for (let i = 0; i < piece.amount; i++) {

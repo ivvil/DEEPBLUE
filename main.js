@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import Playfield from './Playfield.js';
+import { Game } from './Game.js';
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -9,13 +10,18 @@ const camera = new THREE.PerspectiveCamera(
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
+const light = new THREE.AmbientLight(0xaaaaaa);
+scene.add(light);
 
 const board = new Playfield(scene);
 board.add();
 
-camera.position.z = 15;
+camera.position.z = 20;
 
 const clock = new THREE.Clock();
+
+let game = new Game(scene, board);
+game.rndmField();
 
 function animate() {
     const delta = clock.getDelta();
