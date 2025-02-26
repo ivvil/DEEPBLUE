@@ -15,10 +15,10 @@
 </svelte:head>
 
 <section class="hero">
-    <h1 class="text-black hover:rotate-720 transition-transform duration-500">
+    <h1>
         Hundir la Flota
     </h1>
-    <p class="text-black hover:scale-70 transition-transform duration-500">
+    <p class="text-black">
         ¡Bienvenido comandante! Prepárate para sumergirte en batallas navales épicas y enfrentar a otros jugadores en línea. Conéctate y demuestra tu estrategia en este clásico juego reinventado.
     </p>
     <div class="buttons jugar_button">
@@ -48,7 +48,9 @@
     h1 {
         font-size: 3rem;
         margin-bottom: 1rem;
-		animation: colorChange 5s infinite;
+		background-image: linear-gradient(to left, blue, purple);
+        background-clip: text;
+        color: transparent;
     }
 
     p {
@@ -67,7 +69,7 @@
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        background-color: #007bff;
+		background-image: linear-gradient(to left, blue, purple);
         color: #fff;
         font-size: 1rem;
         transition: background-color 0.3s ease;
@@ -76,17 +78,6 @@
     button:hover {
         background-color: #0056b3;
     }
-	@keyframes colorChange {
-            0% { color: hsl(0, 100%, 50%); }
-            50% { color: hsl(180, 100%, 50%); }
-            100% { color: hsl(360, 100%, 50%); }
-        }
-    @media (max-width: 768px) {
-        h1 {
-            font-size: 2.5rem;
-        }
-        p {
-            font-size: 1rem;
-        }
-    }
+
+    
 </style>

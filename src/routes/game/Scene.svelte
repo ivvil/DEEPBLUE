@@ -11,5 +11,5 @@
 <PlayField></PlayField>
 
 {#await useGltf('/models/kenney_watercraft-pack/Models/boat-fishing-small.glb') then gltf}
-  <T is={gltf.scene} /> 
+  <T is={gltf.scene} castShadow/> 
 {/await}
