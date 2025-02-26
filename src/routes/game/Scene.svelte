@@ -1,8 +1,15 @@
 <script>
   import { T } from '@threlte/core'
+  import { useGltf } from '@threlte/extras'
+  import { useLoader } from '@threlte/core' 
+  import PlayField from './PlayField.svelte';
+
 </script>
 
-<T.Mesh position={[ -3.6, 1.7, 0.2 ]}>
-  <T.BoxGeometry />
-  <T.MeshBasicMaterial />
-</T.Mesh>
+<T.DirectionalLight position={[0, 10, 10]} />
+
+<PlayField></PlayField>
+
+{#await useGltf('/models/kenney_watercraft-pack/Models/boat-fishing-small.glb') then gltf}
+  <T is={gltf.scene} /> 
+{/await}

@@ -5,6 +5,7 @@
 </script>
 
 <header>
+	<h1>😈🔥😈 Tetas Sabrosas 96 😈🔥😈</h1>
 	<div class="corner">
 		<a href="https://svelte.dev/docs/kit">
 			<img src={logo} alt="SvelteKit" />

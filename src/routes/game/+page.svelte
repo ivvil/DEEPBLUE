@@ -1,6 +1,7 @@
 <script>
 	import { Canvas } from '@threlte/core';
 	import { Studio } from '@threlte/studio';
+	import { WebGPURenderer } from 'three/webgpu'	
 	import Scene from './Scene.svelte';
 </script>
 
