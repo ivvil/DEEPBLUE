@@ -1,7 +1,7 @@
 # DEEPBLUE Todo #
 
 - [ ] Dibujar el campo de juego
-    - [ ] Dibujar grid
+    - [x] Dibujar grid
     - [ ] Añadir coordenadas (filas y columnas)
 - [ ] Logica de juego
     - [ ] Testeo

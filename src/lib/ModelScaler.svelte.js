@@ -1,0 +1,3 @@
+export scaleObject(obj, scale) {
+  
+}
