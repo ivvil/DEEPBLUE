@@ -1,3 +1,0 @@
-export scaleObject(obj, scale) {
-  
-}

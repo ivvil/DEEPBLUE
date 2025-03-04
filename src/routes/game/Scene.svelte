@@ -11,4 +11,4 @@
 
 <PlayField></PlayField>
 
-<BoatFishingSmall scale={[0.5, 1, 0.75]}/>
+<BoatFishingSmall scale={[0.5, 0.75, 0.75]}/>
