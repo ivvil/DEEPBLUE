@@ -3,7 +3,8 @@
   import { useGltf } from '@threlte/extras'
   import { useLoader } from '@threlte/core' 
   import PlayField from './PlayField.svelte';
-  import BoatFishingSmall from './BoatFishingSmall.svelte';
+  import Ship from './Ship.svelte';
+	import { Vector3 } from 'three';
 
 </script>
 
@@ -11,4 +12,4 @@
 
 <PlayField></PlayField>
 
-<BoatFishingSmall scale={[0.5, 0.75, 0.75]}/>
+<Ship modelName={'boat-fishing-small.glb'} pos={new Vector3(0, 0, 0)} size={new Vector3(1, 2, 3)}/>

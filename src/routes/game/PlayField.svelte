@@ -25,7 +25,7 @@
 </script>
 
 {#await texture then ocean}
-	<T.Mesh rotation.x={Math.PI / 2} name="bg">
+	<T.Mesh rotation.x={Math.PI / 2} name="bg" position={[ 0, 0, 0.1 ]}>
 		<T.PlaneGeometry args={[globals.playfield.size.x, globals.playfield.size.y]} />
 		<T.MeshBasicMaterial map={ocean} side={DoubleSide} map.offset.x={xOffset}></T.MeshBasicMaterial>
 	</T.Mesh>
