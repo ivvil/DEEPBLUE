@@ -12,9 +12,8 @@
 
 <div class="app">
 	<Canvas>
-		<Studio>
+		
 			<Scene />
-		</Studio>
 	</Canvas>
 </div>
 

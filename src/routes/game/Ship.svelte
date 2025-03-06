@@ -1,37 +1,65 @@
 <script>
-	import Bbox from '$lib/bbox';
-import { T } from '@threlte/core';
-	import { useGltf } from '@threlte/extras';
-	import { Group, Mesh, Vector2, Vector3 } from 'three';
+  import { T } from '@threlte/core';
+  import { useGltf } from '@threlte/extras';
+  import Bbox from '$lib/bbox';
+  import { Plane, Raycaster, Vector3 } from 'three';
 
-	/**
-	 * @typedef {Object} Props
-	 * @property {string} modelName Ship model to render
-	 * @property {Vector3} pos Size of the ship
-	 * @property {Vector3} [rotation = new Vector3(0,0,0)] Rotation of the ship
-	 */
-
-	/** @type {Props} */
-  let { modelName, pos, rotation = new Vector3(0, 0, 0), size = new Vector3(1, 1, 1), ...props } = $props();
-
-  const gltf = useGltf(modelName);
-  const geo = modelName.substring(0, modelName.length - 4) + "_1";
-
+  export let modelName;
+  export let pos = new Vector3(0, 0, 0);
+  export let rotation = new Vector3(0, 0, 0);
+  export let size = new Vector3(1, 1, 1);
+  export let camera; // Recibe la cámara como prop
   
-  // console.log(Object.values(gltf.nodes));
+  let gltf = useGltf(modelName);
+  const geo = modelName.substring(0, modelName.lastIndexOf('.')) + "_1";
 
   function scaleMesh(mesh) {
-	Bbox.scale(mesh, size);
+    Bbox.scale(mesh, size);
+  }
+
+  const raycaster = new Raycaster();
+  const plane = new Plane(new Vector3(0, 1, 0), 0);
+
+  let isDragging = false;
+
+  function handlePointerDown(e) {
+    e.stopPropagation();
+    isDragging = true;
+  }
+
+  function handlePointerMove(e) {
+    e.stopPropagation();
+    if (!isDragging) return;
+    const { clientX, clientY } = e;
+    const ndcX = (clientX / window.innerWidth) * 2 - 1;
+    const ndcY = -(clientY / window.innerHeight) * 2 + 1;
+    raycaster.setFromCamera({ x: ndcX, y: ndcY }, camera);
+    const newPos = new Vector3();
+    if (raycaster.ray.intersectPlane(plane, newPos)) {
+      pos.x = newPos.x;
+      pos.z = newPos.z;
+    }
+  }
+
+  function handlePointerUp(e) {
+    e.stopPropagation();
+    isDragging = false;
   }
 </script>
 
-<T.Group dispose={false} {...props}>
-  {#await gltf then gltf}
-	<T.Mesh
-	  geometry={gltf.nodes[geo].geometry}
-	  material={gltf.materials.colormap}
-	  position.set={pos}
-	  oncreate={scaleMesh}  />
+<T.Group
+  dispose={false}
+  on:pointerdown={handlePointerDown}
+  on:pointermove={handlePointerMove}
+  on:pointerup={handlePointerUp}
+>
+  {#await gltf then loaded}
+    <T.Mesh
+      geometry={loaded.nodes[geo].geometry}
+      material={loaded.materials.colormap}
+      position={[pos.x, pos.y, pos.z]}
+      rotation={[rotation.x, rotation.y, rotation.z]}
+      oncreate={scaleMesh}
+    />
   {/await}
 </T.Group>
-
