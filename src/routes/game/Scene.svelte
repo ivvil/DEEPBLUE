@@ -19,7 +19,6 @@
   }}
 />
 
-<!-- Each ship now has its own TransformControls -->
 <Ship modelName="boat-fishing-small.glb" pos={new Vector3(4, 0, 2)} size={new Vector3(1, 2, 3)} {camera} />
 <Ship modelName="boat-speed-a.glb" pos={new Vector3(-4, 0, -2)} size={new Vector3(1, 1, 2)} {camera} />
 <Ship modelName="boat-sail-b.glb" pos={new Vector3(0, 0, 0)} size={new Vector3(1, 1, 4)} {camera} />
