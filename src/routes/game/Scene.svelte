@@ -7,15 +7,18 @@
   let camera;
 </script>
 
+<T.DirectionalLight position={[0, 10, 10]} />
+<PlayField />
+<T.PerspectiveCamera
+  makeDefault
+  position={[0, 15, 0]}
+  oncreate={(ref) => {
+    camera = ref;
+    ref.lookAt(0, 0, 0);
+  }}
+/>
 
-  <T.DirectionalLight position={[0, 10, 10]} />
-  <PlayField />
-  <T.PerspectiveCamera
-    makeDefault
-    position={[0, 15, 0]}
-    oncreate={(ref) => {
-      camera = ref;
-      ref.lookAt(0, 0, 0);
-    }}
-  />
-  <Ship modelName="boat-fishing-small.glb" pos={new Vector3(4, 0, 2)} size={new Vector3(1, 2, 3)} camera={camera} />
+<!-- Barcos con TransformControls individuales -->
+<Ship modelName="boat-fishing-small.glb" pos={new Vector3(4, 0, 2)} size={new Vector3(1, 2, 3)} camera={camera} />
+<Ship modelName="boat-speed-a.glb" pos={new Vector3(-4, 0, -2)} size={new Vector3(1, 1, 2)} camera={camera} />
+<Ship modelName="boat-sail-b.glb" pos={new Vector3(0, 0, 0)} size={new Vector3(1, 1, 4)} camera={camera} />
