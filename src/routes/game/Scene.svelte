@@ -1,3 +1,4 @@
+//// filepath: e:\Desarrollo\Clase\Desarrollo Cliente\DEEPBLUE\src\routes\game\Scene.svelte
 <script>
   import { T } from '@threlte/core';
   import PlayField from './PlayField.svelte';
@@ -18,7 +19,7 @@
   }}
 />
 
-<!-- Barcos con TransformControls individuales -->
-<Ship modelName="boat-fishing-small.glb" pos={new Vector3(4, 0, 2)} size={new Vector3(1, 2, 3)} camera={camera} />
-<Ship modelName="boat-speed-a.glb" pos={new Vector3(-4, 0, -2)} size={new Vector3(1, 1, 2)} camera={camera} />
-<Ship modelName="boat-sail-b.glb" pos={new Vector3(0, 0, 0)} size={new Vector3(1, 1, 4)} camera={camera} />
+<!-- Each ship now has its own TransformControls -->
+<Ship modelName="boat-fishing-small.glb" pos={new Vector3(4, 0, 2)} size={new Vector3(1, 2, 3)} {camera} />
+<Ship modelName="boat-speed-a.glb" pos={new Vector3(-4, 0, -2)} size={new Vector3(1, 1, 2)} {camera} />
+<Ship modelName="boat-sail-b.glb" pos={new Vector3(0, 0, 0)} size={new Vector3(1, 1, 4)} {camera} />
