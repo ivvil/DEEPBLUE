@@ -7,7 +7,7 @@
   let camera;
 </script>
 
-<T.Canvas>
+
   <T.DirectionalLight position={[0, 10, 10]} />
   <PlayField />
   <T.PerspectiveCamera
@@ -19,4 +19,3 @@
     }}
   />
   <Ship modelName="boat-fishing-small.glb" pos={new Vector3(4, 0, 2)} size={new Vector3(1, 2, 3)} camera={camera} />
-</T.Canvas>

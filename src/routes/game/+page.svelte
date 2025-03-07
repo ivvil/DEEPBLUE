@@ -11,8 +11,7 @@
 </svelte:head>
 
 <div class="app">
-	<Canvas>
-		
+	<Canvas>		
 			<Scene />
 	</Canvas>
 </div>

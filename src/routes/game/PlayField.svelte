@@ -5,6 +5,7 @@
 	import { DoubleSide, RepeatWrapping } from 'three';
 	import { globals } from './Globals';
 	import Grid from './Grid.svelte';
+	
 
 	const texture = useTexture('assets/ocean.jpg', {
 		transform: (texture) => {
@@ -23,6 +24,8 @@
 		xOffset += dt * 0.1;
 	});
 </script>
+
+
 
 {#await texture then ocean}
 	<T.Mesh rotation.x={Math.PI / 2} name="bg" position={[ 0, -0.01, 0 ]}>

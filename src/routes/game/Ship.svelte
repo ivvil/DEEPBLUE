@@ -1,65 +1,64 @@
 <script>
-  import { T } from '@threlte/core';
-  import { useGltf } from '@threlte/extras';
-  import Bbox from '$lib/bbox';
-  import { Plane, Raycaster, Vector3 } from 'three';
+	import { T } from '@threlte/core';
+	import { interactivity, useGltf } from '@threlte/extras';
+	import Bbox from '$lib/bbox';
+	import { Plane, Raycaster, Vector3 } from 'three';
+	import { OrbitControls, TrackballControls, TransformControls } from '@threlte/extras';
 
-  export let modelName;
-  export let pos = new Vector3(0, 0, 0);
-  export let rotation = new Vector3(0, 0, 0);
-  export let size = new Vector3(1, 1, 1);
-  export let camera; // Recibe la cámara como prop
-  
-  let gltf = useGltf(modelName);
-  const geo = modelName.substring(0, modelName.lastIndexOf('.')) + "_1";
+	let {
+		modelName,
+		pos = new Vector3(0, 0, 0),
+		rotation = new Vector3(0, 0, 0),
+		size = new Vector3(1, 1, 1)
+	} = $props(); // Recibe la cámara como prop
 
-  function scaleMesh(mesh) {
-    Bbox.scale(mesh, size);
-  }
+	interactivity();
 
-  const raycaster = new Raycaster();
-  const plane = new Plane(new Vector3(0, 1, 0), 0);
+	let gltf = useGltf(modelName);
+	const geo = modelName.substring(0, modelName.lastIndexOf('.')) + '_1';
 
-  let isDragging = false;
+	function scaleMesh(mesh) {
+		Bbox.scale(mesh, size);
+	}
 
-  function handlePointerDown(e) {
-    e.stopPropagation();
-    isDragging = true;
-  }
+	const raycaster = new Raycaster();
+	const plane = new Plane(new Vector3(0, 1, 0), 0);
 
-  function handlePointerMove(e) {
-    e.stopPropagation();
-    if (!isDragging) return;
-    const { clientX, clientY } = e;
-    const ndcX = (clientX / window.innerWidth) * 2 - 1;
-    const ndcY = -(clientY / window.innerHeight) * 2 + 1;
-    raycaster.setFromCamera({ x: ndcX, y: ndcY }, camera);
-    const newPos = new Vector3();
-    if (raycaster.ray.intersectPlane(plane, newPos)) {
-      pos.x = newPos.x;
-      pos.z = newPos.z;
-    }
-  }
+	let isDragging = false;
 
-  function handlePointerUp(e) {
-    e.stopPropagation();
-    isDragging = false;
-  }
+	function handlePointerDown(e) {
+		isDragging = true;
+	}
+
+	function handlePointerMove(e) {
+		console.log(e);
+		if (!isDragging) return;
+		const { clientX, clientY } = e;
+		const ndcX = (clientX / window.innerWidth) * 2 - 1;
+		const ndcY = -(clientY / window.innerHeight) * 2 + 1;
+		raycaster.setFromCamera({ x: ndcX, y: ndcY }, camera);
+		const newPos = new Vector3();
+		if (raycaster.ray.intersectPlane(plane, newPos)) {
+			pos.x = newPos.x;
+			pos.z = newPos.z;
+		}
+	}
+
+	function handlePointerUp(e) {
+		isDragging = false;
+	}
 </script>
 
-<T.Group
-  dispose={false}
-  on:pointerdown={handlePointerDown}
-  on:pointermove={handlePointerMove}
-  on:pointerup={handlePointerUp}
->
-  {#await gltf then loaded}
-    <T.Mesh
-      geometry={loaded.nodes[geo].geometry}
-      material={loaded.materials.colormap}
-      position={[pos.x, pos.y, pos.z]}
-      rotation={[rotation.x, rotation.y, rotation.z]}
-      oncreate={scaleMesh}
-    />
-  {/await}
-</T.Group>
+<TransformControls translationSnap={1}>
+	<T.Group dispose={false}>
+		{#await gltf then loaded}
+			<T.Mesh
+				geometry={loaded.nodes[geo].geometry}
+				material={loaded.materials.colormap}
+				position={[pos.x, pos.y, pos.z]}
+				rotation={[rotation.x, rotation.y, rotation.z]}
+				oncreate={scaleMesh}
+			/>
+		{/await}
+	</T.Group>
+</TransformControls>
